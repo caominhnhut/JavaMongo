@@ -1,6 +1,6 @@
-# Spring Boot PostgreSQL Example
+# Spring Boot MongoDB Example
 
-A simple Spring Boot application demonstrating integration with PostgreSQL database.
+A simple Spring Boot application demonstrating integration with MongoDB database.
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ A simple Spring Boot application demonstrating integration with PostgreSQL datab
 
 ## Setup
 
-1. Start PostgreSQL using Docker Compose:
+1. Start MongoDB using Docker Compose:
 ```bash
 docker compose up -d
 ```
@@ -42,9 +42,7 @@ Choose the appropriate profile when running the application.
 Update `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/your_database
-spring.datasource.username=your_username
-spring.datasource.password=your_password
+spring.data.mongodb.uri=mongodb://root:example@localhost:27017/spring_boot_mongo?authSource=admin
 ```
 
 ## API Endpoints
@@ -78,10 +76,9 @@ spring.datasource.password=your_password
 ## Technologies
 
 - Spring Boot
-- Spring Data JPA
+- Spring Data MongoDB
 - Spring Security
 - Spring Audit
-- PostgreSQL
-- Flyway (Database Migration)
+- MongoDB
 - Maven
 - Lombok

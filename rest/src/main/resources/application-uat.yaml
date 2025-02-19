@@ -1,29 +1,16 @@
 spring:
   application:
-    name: spring-boot-postgre-sql
+    name: spring-boot-mongo
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/spring-boot-postgre-sql
-    username: postgres
-    password: password
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-        jdbc:
-          time_zone: UTC
+  data:
+    mongodb:
+      uri: mongodb://root:example@localhost:27017/spring_boot_mongo?authSource=admin
 
 logging:
   level:
     root: info
     com.sts: info
     org.springframework.web: info
-    org.hibernate: info
+    org.mongodb.driver: info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} [%file:%line] - %msg%n"

@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  spring-boot-postgre-sql:
-    image: postgres:16
-    container_name: spring-boot-postgre-sql
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: spring-boot-postgre-sql
-      TZ: UTC
+  mongodb:
+    image: mongo:8.0
+    container_name: spring-boot-mongo
     ports:
-      - "5432:5432"
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: spring_boot_mongo
+      TZ: UTC
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongo-data:/data/db
 
 volumes:
-  postgres_data:
+  mongo-data:

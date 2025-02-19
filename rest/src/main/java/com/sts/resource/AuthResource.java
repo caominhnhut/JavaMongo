@@ -55,7 +55,7 @@ public class AuthResource {
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(UserInfoResponse.builder()
-                        .id(userDetails.getId())
+                        .id(userDetails.getId().toHexString())
                         .email(userDetails.getUsername())
                         .roles(roles).build());
     }

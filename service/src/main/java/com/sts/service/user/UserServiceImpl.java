@@ -6,9 +6,11 @@ import com.sts.model.user.dto.UserDto;
 import com.sts.model.user.request.UserCreateRequest;
 import com.sts.model.user.request.UserUpdateRequest;
 import com.sts.repository.UserRepository;
+import com.sts.repository.UserRoleRepository;
 import com.sts.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+    private final UserRoleRepository userRoleRepository;
 
     @Override
     public List<UserDto> getAllUsers() {
@@ -31,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getUserById(Long id) {
+    public Optional<UserDto> getUserById(ObjectId id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto);
     }
@@ -49,23 +52,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Long id, UserUpdateRequest userDetails) {
+    public UserDto updateUser(ObjectId id, UserUpdateRequest userDetails) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    var updatedUser = UserEntity.builder()
-                            .id(existingUser.getId())
-                            .name(userDetails.getName())
-                            .email(existingUser.getEmail())
-                            .password(existingUser.getPassword())
-                            .status(UserStatus.ACTIVE)
-                            .build();
-                    return userMapper.toDto(userRepository.save(updatedUser));
+                    existingUser.setName(userDetails.getName());
+                    return userMapper.toDto(userRepository.save(existingUser));
                 })
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(ObjectId id) {
         userRepository.deleteById(id);
     }
 

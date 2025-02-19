@@ -7,6 +7,7 @@ import com.sts.service.role.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,8 @@ public class RoleResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDto> getRoleById(@PathVariable Long id) {
-        Optional<RoleDto> role = roleService.getRoleById(id);
+    public ResponseEntity<RoleDto> getRoleById(@PathVariable String id) {
+        Optional<RoleDto> role = roleService.getRoleById(new ObjectId(id));
         return role.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -47,14 +48,14 @@ public class RoleResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RoleDto> updateRole(@PathVariable Long id, @RequestBody @Valid RoleUpdateRequest roleUpdateRequest) {
-        RoleDto updatedRole = roleService.updateRole(id, roleUpdateRequest);
+    public ResponseEntity<RoleDto> updateRole(@PathVariable String id, @RequestBody @Valid RoleUpdateRequest roleUpdateRequest) {
+        RoleDto updatedRole = roleService.updateRole(new ObjectId(id), roleUpdateRequest);
         return ResponseEntity.ok(updatedRole);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
-        roleService.deleteRole(id);
+    public ResponseEntity<Void> deleteRole(@PathVariable String id) {
+        roleService.deleteRole(new ObjectId(id));
         return ResponseEntity.noContent().build();
     }
 

@@ -1,13 +1,15 @@
 package com.sts.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "user_roles")
+@Document(collection = "user_roles")
 @Getter
 @ToString
 @AllArgsConstructor
@@ -19,14 +21,14 @@ public class UserRoleEntity extends AuditMetaData implements Serializable {
     private static final long serialVersionUID = 327894678329L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    private ObjectId id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Setter
+    @Field(name = "user_id")
+    private ObjectId userId;
 
-    @Column(name = "role_id", nullable = false)
-    private Long roleId;
+    @Setter
+    @Field(name = "role_id")
+    private ObjectId roleId;
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class UserInfoResponse {
 
-    private Long id;
+    private String id;
 
     private String email;
 

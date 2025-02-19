@@ -1,5 +1,7 @@
 package com.sts.service.userdetails;
 
+import com.sts.entity.UserRoleEntity;
+import com.sts.repository.RoleRepository;
 import com.sts.repository.UserRepository;
 import com.sts.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +22,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRoleRepository userRoleRepository;
 
+    private final RoleRepository roleRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        var roles = userRoleRepository.findByUserId(user.getId());
+        var userRolesEntity = userRoleRepository.findByUserId(user.getId());
+        var roleEntities = roleRepository.findAllById(userRolesEntity.stream()
+                .map(UserRoleEntity::getRoleId)
+                .toList());
 
-        return UserDetailsImpl.build(user, roles);
+        return UserDetailsImpl.build(user, new HashSet<>(roleEntities));
     }
 
 }

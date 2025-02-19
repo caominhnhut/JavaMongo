@@ -7,9 +7,9 @@ import lombok.Data;
 public class UserRoleUpdateRequest {
 
     @NotNull
-    private Long userId;
+    private String userId;
 
     @NotNull
-    private Long roleId;
+    private String roleId;
 
 }

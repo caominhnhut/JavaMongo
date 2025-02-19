@@ -8,6 +8,7 @@ import com.sts.repository.UserRoleRepository;
 import com.sts.service.mapper.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Optional<UserRoleDto> getUserRoleById(Long id) {
+    public Optional<UserRoleDto> getUserRoleById(ObjectId id) {
         return userRoleRepository.findById(id)
                 .map(userRoleMapper::toDto);
     }
@@ -38,29 +39,26 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRoleDto createUserRole(UserRoleCreateRequest userRoleRequest) {
         var userRoleEntity = UserRoleEntity.builder()
-                .userId(userRoleRequest.getUserId())
-                .roleId(userRoleRequest.getRoleId())
+                .userId(new ObjectId(userRoleRequest.getUserId()))
+                .roleId(new ObjectId(userRoleRequest.getRoleId()))
                 .build();
         var savedUserRole = userRoleRepository.save(userRoleEntity);
         return userRoleMapper.toDto(savedUserRole);
     }
 
     @Override
-    public UserRoleDto updateUserRole(Long id, UserRoleUpdateRequest userRoleDetails) {
+    public UserRoleDto updateUserRole(ObjectId id, UserRoleUpdateRequest userRoleDetails) {
         return userRoleRepository.findById(id)
                 .map(existingUserRole -> {
-                    var updatedUserRole = UserRoleEntity.builder()
-                            .id(existingUserRole.getId())
-                            .userId(userRoleDetails.getUserId())
-                            .roleId(userRoleDetails.getRoleId())
-                            .build();
-                    return userRoleMapper.toDto(userRoleRepository.save(updatedUserRole));
+                    existingUserRole.setRoleId(new ObjectId(userRoleDetails.getRoleId()));
+                    existingUserRole.setUserId(new ObjectId(userRoleDetails.getUserId()));
+                    return userRoleMapper.toDto(userRoleRepository.save(existingUserRole));
                 })
                 .orElseThrow(() -> new RuntimeException("UserRole not found"));
     }
 
     @Override
-    public void deleteUserRole(Long id) {
+    public void deleteUserRole(ObjectId id) {
         userRoleRepository.deleteById(id);
     }
 

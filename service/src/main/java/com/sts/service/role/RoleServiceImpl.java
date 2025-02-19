@@ -8,6 +8,7 @@ import com.sts.repository.RoleRepository;
 import com.sts.service.mapper.RoleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<RoleDto> getRoleById(Long id) {
+    public Optional<RoleDto> getRoleById(ObjectId id) {
         return roleRepository.findById(id)
                 .map(roleMapper::toDto);
     }
@@ -45,20 +46,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDto updateRole(Long id, RoleUpdateRequest roleDetails) {
+    public RoleDto updateRole(ObjectId id, RoleUpdateRequest roleDetails) {
         return roleRepository.findById(id)
                 .map(existingRole -> {
-                    var updatedRole = RoleEntity.builder()
-                            .id(existingRole.getId())
-                            .roleName(roleDetails.getName())
-                            .build();
-                    return roleMapper.toDto(roleRepository.save(updatedRole));
+                    existingRole.setRoleName(roleDetails.getName());
+                    return roleMapper.toDto(roleRepository.save(existingRole));
                 })
                 .orElseThrow(() -> new RuntimeException("Role not found"));
     }
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteRole(ObjectId id) {
         roleRepository.deleteById(id);
     }
 
